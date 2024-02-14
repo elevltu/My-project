@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject bullet;
     private bool shootCooldown;
     public static int shotDelay;
+    public static int health = 3;
     // Start is called before the first frame update
     void Start()
     {
@@ -72,15 +74,31 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity.Normalize();
             rb.SetRotation(225);
         }
-        if (Input.GetKeyDown(KeyCode.Space) && !shootCooldown) {
-            Instantiate(bullet);
-            shootCooldown = true;
-            DelayBetweenShots();
+        if (!PauseScript.isPaused)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && !shootCooldown)
+            {
+                Instantiate(bullet);
+                shootCooldown = true;
+                DelayBetweenShots();
+            }
         }
     }
     async void DelayBetweenShots()
     {
         await Task.Delay(shotDelay);
         shootCooldown = false;
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Enemy")
+        {
+            DestroyObject(collision.gameObject);
+            health -= 1;
+            if (health <= 0)
+            {
+                SceneManager.LoadScene("Game Over");
+            }
+        }
     }
 }

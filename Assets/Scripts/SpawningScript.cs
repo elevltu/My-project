@@ -24,12 +24,12 @@ public class SpawningScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canSpawn)
+        if (canSpawn && !PauseScript.isPaused)
         {
             Instantiate(enemy);
             canSpawn = false;
             SpawnDelay();
-            
+
         }
     }
     async void SpawnDelay()

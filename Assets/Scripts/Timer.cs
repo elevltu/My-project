@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    private float timer;
+    public static float timer;
     private bool upgradeDone;
+    public static bool currentlyUpgrading;
     // Start is called before the first frame update
     void Start()
     {
         timer = 0;
         upgradeDone = true;
+        currentlyUpgrading = false;
     }
 
     // Update is called once per frame
@@ -21,8 +23,10 @@ public class Timer : MonoBehaviour
         {
             
             Time.timeScale = 0;
-            UpgradeManager.upgradeCanvas.enabled = true;
+            UpgradeManager.ownGameObjectForUseElsewhere.SetActive(true);
+            PauseScript.isPaused = true;
             upgradeDone = true;
+            currentlyUpgrading = true;
 
         } else if (upgradeDone && (timer%30 >= 5 && timer%30 <= 7)) {
             upgradeDone = false;
